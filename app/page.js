@@ -1,9 +1,20 @@
-import ClientDemo from "@/components/ClientDemo";
+/* import ClientDemo from "@/components/ClientDemo";
 import DataFetchingDemo from "@/components/DataFetchingDemo";
 import RSCDemo from '@/components/RCSDemo';
-import ServerActionsDemo from "@/components/ServerActionsDemo";
+import ServerActionsDemo from "@/components/ServerActionsDemo"; */
+import fs from 'node:fs/promises';
 
-export default function Home() {
+import UsePromiseDemo from "@/components/UsePromisesDemo";
+import { Suspense } from "react";
+
+export default async function Home() {
+  const fetchUserPromise = new Promise((resolve) => setTimeout(async () => {
+    const data = await fs.readFile('dummy-db.json', 'utf-8');
+    const users = JSON.parse(data);
+    resolve(users);
+  }, 2000))
+  
+
   return (
     <main>
       {/* 
@@ -15,7 +26,10 @@ export default function Home() {
       */}
     
       {/* <DataFetchingDemo /> */}
-      <ServerActionsDemo />
+      {/* <ServerActionsDemo /> */}
+      <Suspense fallback={<p>Loading users...</p>}>
+        <UsePromiseDemo usersPromise={fetchUserPromise}/>
+      </Suspense> 
     </main>
   );
 }
